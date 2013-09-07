@@ -1,0 +1,200 @@
+@import url("http://fonts.googleapis.com/css?family=Underdog&subset=latin,latin-ext,cyrillic")
+@import url("http://fonts.googleapis.com/css?family=Source+Code+Pro")
+@import 'nib'
+
+slide-width = 800px
+slide-height = 600px
+slide-background = rgb(20, 40, 65)
+
+slide-transition-length = .6s
+slide-transition-easing = ease
+slide-transition-translate-x = 0
+slide-transition-rotate-y = 90deg
+
+bullet-transition-length = .3s
+bullet-transition-easing = ease
+bullet-transition-translate-x = 16px
+
+heading-color = rgb(216, 164, 82)
+text-color = rgb(192, 211, 229)
+link-color = rgb(216, 164, 82)
+link-hover-color = rgb(67, 110, 195)
+
+
+// Theme
+
+body
+
+  background: slide-background
+  color: text-color
+
+  .cf
+    color: darken(text-color, 50%)
+
+  em
+    color: heading-color
+
+  h1, h2, h3, h4, h5, h6
+    color: heading-color
+    & > a
+      color: heading-color
+
+  a
+    color: link-color
+    &:hover
+      color: link-hover-color
+
+  &.light
+
+    color: invert(text-color)
+    background: lighten(invert(slide-background), 90%)
+
+    .cf
+      color: invert(darken(text-color, 50%))
+
+    em
+      color: invert(heading-color)
+
+    h1, h2, h3, h4, h5, h6
+      color: invert(heading-color)
+      & > a
+        color: invert(heading-color)
+
+    a
+      &:hover
+        color: invert(link-hover-color)
+      color: invert(link-color)
+
+*
+  box-sizing: border-box
+  margin: 0
+  padding: 0
+
+.x-small
+  font-size: 60%
+
+.small
+  font-size: 80%
+
+.large
+  font-size: 120%
+
+.theme-toggle
+  user-select: none
+  width: 40px
+  height: @width
+  position: fixed
+  bottom: 0
+  right: 0
+  z-index: 99999
+  cursor: pointer
+  text-align: center
+  padding: 2px
+
+article
+  transition: background slide-transition-length slide-transition-easing
+  display: none
+  &.bespoke-parent
+    display: block
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    overflow: hidden
+    perspective: 600px
+
+.bespoke-slide
+  transition: all slide-transition-length slide-transition-easing
+  transform-origin: 50% 50% ((slide-width / 2) * -1)
+  backface-visibility: hidden
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  text-align: center
+  width: slide-width
+  height: slide-height
+  position: absolute
+  top: 50%
+  margin-top: (slide-height / 2) * -1
+  left: 50%
+  margin-left: (slide-width / 2) * -1
+  padding: 40px
+  border-radius: 0
+
+.bespoke-before
+  transform: translateX(slide-transition-translate-x * -1) rotateY(slide-transition-rotate-y * -1)
+
+.bespoke-after
+  transform: translateX(slide-transition-translate-x) rotateY(slide-transition-rotate-y)
+
+.bespoke-inactive
+  opacity: 0
+  pointer-events: none
+
+.bespoke-active
+  opacity: 1
+
+img
+  margin: 2em 0em
+
+p, pre, ul, img
+  margin-bottom: 1.2em
+
+.footnote
+  @extend .small
+  margin-top: 3em
+  &:before
+    content: '*'
+    margin-right: 0.2em
+
+li
+  margin-bottom: 0.5em
+
+pre, code
+  font-family: 'Source Code Pro', 'Menlo', 'Monaco', monospace
+
+pre
+  text-align: left
+
+code
+  padding: 26px !important
+
+body
+  font-family: 'Underdog', helvetica, arial, sans-serif
+  font-size: 26px
+
+em
+  font-style: normal
+
+h1, h2, h3, h4, h5, h6
+  margin-bottom: 1em
+  line-height: 1.35em
+
+h1
+  font-size: 72px
+  line-height: 82px
+  letter-spacing: -2px
+
+h2
+  font-size: 42px
+  letter-spacing: -1px
+
+h3
+  font-size: 36px
+  font-weight: normal
+
+hr
+  visibility: hidden
+  height: 20px
+
+ul
+  list-style: none
+
+p
+  margin: 0 100px 12px
+  line-height: 1.35em
+
+a
+  text-decoration: none

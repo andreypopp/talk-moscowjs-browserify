@@ -1,0 +1,357 @@
+!!! 5
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport',
+         content='width=device-width, initial-scale=1, maximum-scale=1')
+
+    title Browserify
+
+    link(rel='stylesheet', type='text/css',
+         href='bower_components/prism/prism-tomorrow.css')
+    link(rel='stylesheet', type='text/css',
+         href='styles/main.css')
+
+  body
+
+    a.theme-toggle &#9775;
+
+    article
+
+      section.title
+        a(href="http://browserify.org")
+          img(src='browserify.png')
+        p.small
+          | Andrey Popp &middot;
+          | <a href="https://twitter.com/andreypopp">@andreypopp</a> &middot;
+          | <a href="https://github.com/andreypopp">github.com/andreypopp</a>
+        p MoscowJS Meetup
+
+      section
+        h2 Browserify это...
+        ul
+          li <em>CommonJS</em> API для модулей
+          li <em>npm</em> для управления зависимостями
+          li ... для разработки браузерных приложений
+
+      section
+        pre
+          | % npm install backbone
+          | % npm list
+          | .
+          | └─┬ backbone@1.0.0
+          |   └── underscore@1.5.1
+
+      section
+        pre
+          | var Backbone = require('backbone')
+          | 
+          | module.exports = ...
+
+      section
+        h2 Использование из командной строки
+        pre
+          | % browserify ./app.js > bundle.js
+
+      section
+        h2 ... или используя API
+        pre
+          | var browserify = require('browserify')
+          | 
+          | browserify(['./app.js'])
+          |   .bundle()
+          |   .pipe(process.stdout)
+
+      section
+        h2 Browserify это...
+        p
+          | модули стандартной библиотеки Node.js, которые работают в
+          | бразуере: <em>events</em>, <em>stream</em>, <em>querystring</em>,
+          | <em>url</em>, <em>util</em>, <em>http</em>, <em>path</em>,
+          | <em>assert</em>, <em>buffer</em>, <em>vm</em>, <em>crypto</em>...
+
+      section
+        h2 Browserify это...
+        p
+          | эмуляция <em>__dirname</em>, <em>__filename</em>,
+          | <em>process.nextTick()</em> и других Node-измов
+
+      section
+        h2 Browserify это...
+        p
+          | Возможность писать код, который работает как в браузере, так и в
+          | Node.js
+
+      section
+        h2 Почему npm?
+        ul
+          li "Маленькие компонуемые модули"
+          li А это идеально для разработки для браузера!
+
+      section
+        h2 Философия browserify
+        ul
+          li Все "по-максимуму" <em>как в Node.js</em>
+          li Все зависимости "резольвятся" <em>статически</em>
+          li <em>Минимальный</em> набор функциональности
+
+      section
+        pre % browserify --help
+
+      section
+        h2 Если чего-то не хватает...
+        p ..."скриптуем" используя API
+
+      section
+        pre
+          | browserify()
+          |   .add('./index.js')
+          |   .require('./vendor/lib.js')
+          |   .external('./common.bundle.js')
+          |   .bundle({debug: true})
+          |   .pipe(fs.createWriteStream('./out.js'))
+
+      section
+        p
+          | <em>Browserify</em> отлично подходит как основа для систем сборки
+          | JavaScript кода
+
+      section
+        h2 externalize *
+        p Создание нескольких бандлов для их последующей ленивой подгрузки.
+        p
+          | <a
+          | href="http://esa-matti.suuronen.org/blog/2013/04/15/asynchronous-module-loading-with-browserify/">Читаем</a>
+          | как использовать.
+        p.footnote
+          | npm install externalize
+
+      section
+        h2 Бандлы в UMD * формате
+        p
+          | Включают в себя UMD-обвязку.
+
+        p
+          | Позволяет использовать бандл как <em>AMD</em> модуль и экспортирует
+          | "точку входа" как атрибут <em>window</em>.
+
+        p.footnote Unified Module Format
+
+      section
+        pre % browserify --standalone MyLib ...
+
+      section
+        h2 Но у меня есть любимый jQuery плагин...
+        p
+          | ... который не является CommonJS модулем.
+
+      section
+        h2 browserify-shim *
+        p
+          | Превращает код, который экспортирует <em>window</em> атрибут в
+          | CommonJS модуль, позволяя указать зависимости.
+        p.footnote
+          | Аналогично shim в <em>require.js</em>
+
+      section
+        h2 deamdify
+        p
+          | Превращает AMD модуль в CommonJS модуль.
+
+      section
+        h2 Но у меня есть любимый jQuery плагин...
+        p
+          | ... который не распространяется через npm
+
+      section
+        h2 debowerify и decomponentify
+        p
+          | Используем пакеты, установленные с помощью <em>bower</em> или
+          | <em>component</em>
+
+      section
+        h2 Все компонуется со всем...
+        p
+          | Используем компоненты из <em>bower</em> и <em>component</em>,
+          | понимаем <em>AMD</em> модули:
+        pre
+          | % browserify
+          |   --transform debowerify
+          |   --transform decomponentify
+          |   --transform deamdify
+          |   ./app.js
+
+      section
+        h2 ...или тоже самое, используя API
+        pre
+          | browserify(['./app.js'])
+          |   .transform('debowerify')
+          |   .transform('decomponentify')
+          |   .transform('deamdify')
+          |   .bundle()
+          |   .pipe(process.stdout)
+
+      section
+        h2 Если хочется большего...
+        p ... лучше вообще не использовать browserify
+
+      section
+        p.large
+          | <em>Browserify</em> это всего лишь обвязка для <em>module-deps</em>
+          | и <em>browser-pack</em>.
+        p.large
+          | Каждый из которых можно использовать самостоятельно.
+
+      section
+        pre
+          | % module-deps ./app.js
+          | [
+          |   {id: './index.js', code: '...', deps: [...]},
+          |   {id: './node_modules/backbone/backbone.js', ...},
+          |   {id: './node_modules/underscore/underscore.js', ...}
+          | ]
+          | 
+          | % module-deps ./app.js | browser-pack > bundle.js
+
+      section
+        h2 А что если...
+        p.large ... require('<em>./app.coffee</em>')
+        p.large ... require('<em>./app.ts</em>')
+        p.large ... require('<em>./template.handlebars</em>')
+        p.large ... или даже require('<em>./app.сss</em>')
+        p.large ... и require('<em>./spinner.gif</em>')
+
+      section
+        h2 Преобразования *
+        p
+          | Преобразуют содержимое модуля в валидный JavaScript код.
+        p.footnote transforms
+
+      section
+        pre
+          | % npm install coffeeify
+          | 
+          | % browserify --transform coffeeify ...
+
+      section
+        p.large ...
+        ul.large
+          li <em>typeify</em> для TypeScript
+          li <em>liveify</em> для LiveScript
+          li <em>icsify</em> для IcedCoffeeScript
+
+      section
+        h2 Browserify это...
+        p
+          | ... возможность использовать несколько языков внутри одного проекта
+          | с единой системой модулей через один интегрированный шаг сборки
+
+      section
+        h2 brfs
+        p
+          | <em>var x = fs.readFileSync(filename)</em>
+        p
+          | превращается в
+        p
+          | <em>var x = [содержимое filename]</em>
+
+      section
+        h2
+          a(href="https://npmjs.org/search?q=browserify")
+            | npmjs.org/search?q=browserify
+
+        ul.large
+          li <em>hbsfy</em> для Handlebars шаблонов
+          li <em>ejsify</em> для EJS
+          li <em>es6ify</em> для ECMAScript6
+          li <em>sweetify</em> для поддержки Sweet.js
+          li ...
+
+      section
+        h2 Что делать со статикой?
+        p.large CSS, изображения, шрифты, ...
+
+      section
+        pre
+          | % ls ./fancy_button
+          | index.js
+          | styles.css
+          | icons.woff
+          | spinner.gif
+
+      section
+        pre
+          | % cat ./fancy_button/index.js
+          | require('./spinner.gif')
+          | require('./styles.css')
+          | require('./icons.woff')
+          | 
+          | module.exports = ...
+
+      section
+        pre
+          | % npm install fancy_button
+          | 
+          | var MyFancyButton = require('fancy_button')
+
+      section
+        h2 CommonJS asset spec
+        p Пока в разработке
+        p
+          a(href="https://github.com/petehunt/commonjs-asset-spec")
+            | github.com/petehunt/commonjs-asset-spec
+
+      section
+        h2 Разработка с browserify
+
+      section
+        h3
+          | Node.js
+          | <span class="cf">?</span> <a href="https://npmjs.org/package/connect-browserify">connect-browserify</a>
+          | <span class="cf">:</span> <a href="https://npmjs.org/package/watchify">watchify</a>
+        ul
+          li Следит за изменениями кода
+          li Агрессивно кэширует
+          li Быстрая пересборка бандла
+
+      section
+        h3 Source maps из коробки
+        p При использовании --debug сборки.
+        img(src='sourcemaps.png')
+
+      section
+        h2 OK, но почему не...
+        ul
+          li bower, AMD, require.js
+          li component
+          li ECMAScript Harmony Modules
+          li что-то ещё...
+
+      section
+        h2 CommonJS > AMD
+
+      section
+        h2 npm > bower + component
+
+      section
+        h2 ECMAScript Harmony Modules
+        img(src='harmony-modules-support.png')
+
+      section
+        h2 Общий код на сервере и на клиенте!
+
+      section
+        h2 Demo: пре-рендеринг UI на сервере
+        p Используя Browserify + React
+
+      section
+        h2 Вопросы? Спасибо!
+        p
+          a(href="http://andreypopp.com/talks/browserify/")
+            | http://andreypopp.com/talks/browserify/
+
+    script(src='bower_components/bespoke.js/dist/bespoke.min.js')
+    script(src='bower_components/bespoke-hash/dist/bespoke-hash.min.js')
+    script(src='bower_components/bespoke-state/dist/bespoke-state.min.js')
+    script(src='bower_components/prism/prism.js')
+    script(src='scripts/main.js')
