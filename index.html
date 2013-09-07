@@ -1,0 +1,63 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Browserify</title><link rel="stylesheet" type="text/css" href="bower_components/prism/prism-tomorrow.css"><link rel="stylesheet" type="text/css" href="styles/main.css"></head><body><a class="theme-toggle">&#9775;</a><article><section class="title"><a href="http://browserify.org"><img src="browserify.png"></a><p class="small">Andrey Popp &middot;
+<a href="https://twitter.com/andreypopp">@andreypopp</a> &middot;
+<a href="https://github.com/andreypopp">github.com/andreypopp</a></p><p>MoscowJS Meetup</p></section><section><h2>Browserify это...</h2><ul><li><em>CommonJS</em> API для модулей</li><li><em>npm</em> для управления зависимостями</li><li>... для разработки браузерных приложений</li></ul></section><section><pre>% npm install backbone
+% npm list
+.
+└─┬ backbone@1.0.0
+  └── underscore@1.5.1</pre></section><section><pre>var Backbone = require('backbone')
+ 
+module.exports = ...</pre></section><section><h2>Использование из командной строки</h2><pre>% browserify ./app.js &gt; bundle.js</pre></section><section><h2>... или используя API</h2><pre>var browserify = require('browserify')
+ 
+browserify(['./app.js'])
+  .bundle()
+  .pipe(process.stdout)</pre></section><section><h2>Browserify это...</h2><p>модули стандартной библиотеки Node.js, которые работают в
+бразуере: <em>events</em>, <em>stream</em>, <em>querystring</em>,
+<em>url</em>, <em>util</em>, <em>http</em>, <em>path</em>,
+<em>assert</em>, <em>buffer</em>, <em>vm</em>, <em>crypto</em>...</p></section><section><h2>Browserify это...</h2><p>эмуляция <em>__dirname</em>, <em>__filename</em>,
+<em>process.nextTick()</em> и других Node-измов</p></section><section><h2>Browserify это...</h2><p>Возможность писать код, который работает как в браузере, так и в
+Node.js</p></section><section><h2>Почему npm?</h2><ul><li>"Маленькие компонуемые модули"</li><li>А это идеально для разработки для браузера!</li></ul></section><section><h2>Философия browserify</h2><ul><li>Все "по-максимуму" <em>как в Node.js</em></li><li>Все зависимости "резольвятся" <em>статически</em></li><li><em>Минимальный</em> набор функциональности</li></ul></section><section><pre>% browserify --help</pre></section><section><h2>Если чего-то не хватает...</h2><p>..."скриптуем" используя API</p></section><section><pre>browserify()
+  .add('./index.js')
+  .require('./vendor/lib.js')
+  .external('./common.bundle.js')
+  .bundle({debug: true})
+  .pipe(fs.createWriteStream('./out.js'))</pre></section><section><p><em>Browserify</em> отлично подходит как основа для систем сборки
+JavaScript кода</p></section><section><h2>externalize *</h2><p>Создание нескольких бандлов для их последующей ленивой подгрузки.</p><p><a
+href="http://esa-matti.suuronen.org/blog/2013/04/15/asynchronous-module-loading-with-browserify/">Читаем</a>
+как использовать.</p><p class="footnote">npm install externalize</p></section><section><h2>Бандлы в UMD * формате</h2><p>Включают в себя UMD-обвязку.</p><p>Позволяет использовать бандл как <em>AMD</em> модуль и экспортирует
+"точку входа" как атрибут <em>window</em>.</p><p class="footnote">Unified Module Format</p></section><section><pre>% browserify --standalone MyLib ...</pre></section><section><h2>Но у меня есть любимый jQuery плагин...</h2><p>... который не является CommonJS модулем.</p></section><section><h2>browserify-shim *</h2><p>Превращает код, который экспортирует <em>window</em> атрибут в
+CommonJS модуль, позволяя указать зависимости.</p><p class="footnote">Аналогично shim в <em>require.js</em></p></section><section><h2>deamdify</h2><p>Превращает AMD модуль в CommonJS модуль.</p></section><section><h2>Но у меня есть любимый jQuery плагин...</h2><p>... который не распространяется через npm</p></section><section><h2>debowerify и decomponentify</h2><p>Используем пакеты, установленные с помощью <em>bower</em> или
+<em>component</em></p></section><section><h2>Все компонуется со всем...</h2><p>Используем компоненты из <em>bower</em> и <em>component</em>,
+понимаем <em>AMD</em> модули:</p><pre>% browserify
+  --transform debowerify
+  --transform decomponentify
+  --transform deamdify
+  ./app.js</pre></section><section><h2>...или тоже самое, используя API</h2><pre>browserify(['./app.js'])
+  .transform('debowerify')
+  .transform('decomponentify')
+  .transform('deamdify')
+  .bundle()
+  .pipe(process.stdout)</pre></section><section><h2>Если хочется большего...</h2><p>... лучше вообще не использовать browserify</p></section><section><p class="large"><em>Browserify</em> это всего лишь обвязка для <em>module-deps</em>
+и <em>browser-pack</em>.</p><p class="large">Каждый из которых можно использовать самостоятельно.</p></section><section><pre>% module-deps ./app.js
+[
+  {id: './index.js', code: '...', deps: [...]},
+  {id: './node_modules/backbone/backbone.js', ...},
+  {id: './node_modules/underscore/underscore.js', ...}
+]
+ 
+% module-deps ./app.js | browser-pack &gt; bundle.js</pre></section><section><h2>А что если...</h2><p class="large">... require('<em>./app.coffee</em>')</p><p class="large">... require('<em>./app.ts</em>')</p><p class="large">... require('<em>./template.handlebars</em>')</p><p class="large">... или даже require('<em>./app.сss</em>')</p><p class="large">... и require('<em>./spinner.gif</em>')</p></section><section><h2>Преобразования *</h2><p>Преобразуют содержимое модуля в валидный JavaScript код.</p><p class="footnote">transforms</p></section><section><pre>% npm install coffeeify
+ 
+% browserify --transform coffeeify ...</pre></section><section><p class="large">...</p><ul class="large"><li><em>typeify</em> для TypeScript</li><li><em>liveify</em> для LiveScript</li><li><em>icsify</em> для IcedCoffeeScript</li></ul></section><section><h2>Browserify это...</h2><p>... возможность использовать несколько языков внутри одного проекта
+с единой системой модулей через один интегрированный шаг сборки</p></section><section><h2>brfs</h2><p><em>var x = fs.readFileSync(filename)</em></p><p>превращается в</p><p><em>var x = [содержимое filename]</em></p></section><section><h2><a href="https://npmjs.org/search?q=browserify">npmjs.org/search?q=browserify</a></h2><ul class="large"><li><em>hbsfy</em> для Handlebars шаблонов</li><li><em>ejsify</em> для EJS</li><li><em>es6ify</em> для ECMAScript6</li><li><em>sweetify</em> для поддержки Sweet.js</li><li>...</li></ul></section><section><h2>Что делать со статикой?</h2><p class="large">CSS, изображения, шрифты, ...</p></section><section><pre>% ls ./fancy_button
+index.js
+styles.css
+icons.woff
+spinner.gif</pre></section><section><pre>% cat ./fancy_button/index.js
+require('./spinner.gif')
+require('./styles.css')
+require('./icons.woff')
+ 
+module.exports = ...</pre></section><section><pre>% npm install fancy_button
+ 
+var MyFancyButton = require('fancy_button')</pre></section><section><h2>CommonJS asset spec</h2><p>Пока в разработке</p><p><a href="https://github.com/petehunt/commonjs-asset-spec">github.com/petehunt/commonjs-asset-spec</a></p></section><section><h2>Разработка с browserify</h2></section><section><h3>Node.js
+<span class="cf">?</span> <a href="https://npmjs.org/package/connect-browserify">connect-browserify</a>
+<span class="cf">:</span> <a href="https://npmjs.org/package/watchify">watchify</a></h3><ul><li>Следит за изменениями кода</li><li>Агрессивно кэширует</li><li>Быстрая пересборка бандла</li></ul></section><section><h3>Source maps из коробки</h3><p>При использовании --debug сборки.</p><img src="sourcemaps.png"></section><section><h2>OK, но почему не...</h2><ul><li>bower, AMD, require.js</li><li>component</li><li>ECMAScript Harmony Modules</li><li>что-то ещё...</li></ul></section><section><h2>CommonJS > AMD</h2></section><section><h2>npm > bower + component</h2></section><section><h2>ECMAScript Harmony Modules</h2><img src="harmony-modules-support.png"></section><section><h2>Общий код на сервере и на клиенте!</h2></section><section><h2>Demo: пре-рендеринг UI на сервере</h2><p>Используя Browserify + React</p></section><section><h2>Вопросы? Спасибо!</h2><p><a href="http://andreypopp.com/talks/browserify/">http://andreypopp.com/talks/browserify/</a></p></section></article><script src="bower_components/bespoke.js/dist/bespoke.min.js"></script><script src="bower_components/bespoke-hash/dist/bespoke-hash.min.js"></script><script src="bower_components/bespoke-state/dist/bespoke-state.min.js"></script><script src="bower_components/prism/prism.js"></script><script src="scripts/main.js"></script></body></html>
